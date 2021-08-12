@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <CssBaseline />
           <Component {...pageProps} />
         </QueryClientProvider>
       </ThemeProvider>
