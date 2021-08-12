@@ -22,7 +22,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
+  row-gap: 24px;
   margin-top: 40px;
 }
 
@@ -35,7 +35,6 @@
 }
 
 .signinButton {
-  margin-top: 10px !important;
   text-transform: none !important;
 }
 
