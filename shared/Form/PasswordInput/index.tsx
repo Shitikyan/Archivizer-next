@@ -11,27 +11,29 @@ type Props = TextFieldProps & {
   useShowIcon?: boolean;
 };
 
-export const PasswordInput = ({ useShowIcon, ...rest }: Props) => {
-  const [showPassword, setShowPassword] = useState(false);
+export const PasswordInput = React.forwardRef(
+  ({ useShowIcon, ...rest }: Props, ref: any) => {
+    const [showPassword, setShowPassword] = useState(false);
 
-  return (
-    <TextField
-      {...rest}
-      type={showPassword ? 'text' : 'password'}
-      InputProps={{
-        endAdornment: useShowIcon ? (
-          <InputAdornment position='end'>
-            <IconButton
-              aria-label='toggle password visibility'
-              onClick={() => setShowPassword(!showPassword)}
-              onMouseDown={(e) => e.preventDefault()}
-              edge='end'
-            >
-              {showPassword ? <Visibility /> : <VisibilityOff />}
-            </IconButton>
-          </InputAdornment>
-        ) : null,
-      }}
-    />
-  );
-};
+    return (
+      <TextField
+        {...rest}
+        type={showPassword ? 'text' : 'password'}
+        InputProps={{
+          endAdornment: useShowIcon ? (
+            <InputAdornment position='end'>
+              <IconButton
+                aria-label='toggle password visibility'
+                onClick={() => setShowPassword(!showPassword)}
+                onMouseDown={(e) => e.preventDefault()}
+                edge='end'
+              >
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ) : null,
+        }}
+      />
+    );
+  }
+);
