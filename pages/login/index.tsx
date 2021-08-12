@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     padding: '8px 16px',
     textTransform: 'none',
     fontFamily: 'Rubik',
-  }
+  },
 });
 
 const Login = () => {
@@ -43,7 +43,7 @@ const Login = () => {
   const classes = useStyles();
 
   return (
-    <div className={styles.loginContainer}>
+    <div className='flex flex-col justify-center items-center h-screen'>
       <div>
         <ArchivizerLogo className='h-24 w-24 mx-auto' />
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-200'>
@@ -58,16 +58,10 @@ const Login = () => {
           >
             create new account
           </Link>
-          {/* <div className={styles.newAccount}>
-          <span className='font-medium text-gray-600'>Or</span>
-          <span>
-            
-          </span>
-        </div> */}
         </p>
       </div>
       <form
-        className={`${styles.form} flex px-10`}
+        className={`${styles.form} flex px-10 flex-col`}
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -204,7 +198,7 @@ const Login = () => {
       <div className='px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 my-5'>
         Or continue with
       </div>
-      <div className={styles.webPagesButtonsContainer}>
+      <div className='flex gap-x-2.5 my-1'>
         <Button className={styles.webPagesButtons} variant='contained'>
           <FacebookIcon fontSize='small' />
         </Button>
