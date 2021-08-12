@@ -2,6 +2,9 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const moduleExports = {
   reactStrictMode: true,
+  env: {
+    API_URL: process.env.API_URL,
+  }
 };
 
 const SentryWebpackPluginOptions = {

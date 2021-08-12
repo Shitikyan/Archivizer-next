@@ -8,6 +8,9 @@ module.exports = {
       fontFamily: {
         sans: ['Rubik', ...defaultTheme.fontFamily.sans],
       },
+      zIndex: {
+        '-1': '-1',
+      }
     },
   },
   variants: {
