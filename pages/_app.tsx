@@ -19,6 +19,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </ThemeProvider>
     </React.Fragment>
   );
-}
+};
 
 export default MyApp;

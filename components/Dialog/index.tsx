@@ -30,8 +30,8 @@ const Dialog = ({
         style: { borderRadius: 20, height: '100vh' },
       }}
     >
-      <div className='relative p-2 h-full'>
-        <DialogTitle className='border-b border-solid gray-300 text-center'>
+      <div className='relative p-2 h-full flex flex-col'>
+        <DialogTitle className='border-b border-solid gray-300 text-center flex-grow'>
           {title}
         </DialogTitle>
         <div
@@ -40,12 +40,12 @@ const Dialog = ({
         >
           <Clear />
         </div>
-        <DialogContent className='h-5/6 mt-7 mb-3 text-black'>
+        <DialogContent className='h-5/6 mt-7 mb-3 text-black flex-grow-10'>
           <DialogContentText style={{ color: '#000000' }}>
             {children}
           </DialogContentText>
         </DialogContent>
-        <div className='flex justify-end gap-3'>
+        <div className='flex justify-end gap-3 flex-grow'>
           <Button
             style={{
               textTransform: 'none',

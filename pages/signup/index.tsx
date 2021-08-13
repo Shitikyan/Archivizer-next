@@ -13,7 +13,7 @@ import {
 } from '../../components';
 import { getValidationErrorMessage } from '../../utils/forms';
 import { emailPattern } from '../../utils/constants';
-import { signUp } from '../../services/auth';
+import { signUp } from '../../services/graphql/auth';
 import { useStyles } from './styles';
 
 export interface SignupFormInputs {
@@ -199,8 +199,8 @@ const Signup = () => {
                 header={`There were ${errorValues.length} errors with your submission`}
                 content={
                   <ul className='text-sm list-disc mt-2 pl-5'>
-                    {errorValues.map((value) => (
-                      <li color='error'>{value.message}</li>
+                    {errorValues.map((value, index) => (
+                      <li key={index} color='error'>{value.message}</li>
                     ))}
                   </ul>
                 }

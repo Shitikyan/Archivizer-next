@@ -1,4 +1,4 @@
-import IconButton from './IconButton';
 import UserIcon from './UserIcon';
+import ArchivizerLogo from './ArchivizerLogo';
 
-export { IconButton, UserIcon };
+export { UserIcon, ArchivizerLogo };
