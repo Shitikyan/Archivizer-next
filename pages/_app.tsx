@@ -1,16 +1,15 @@
 import React from 'react';
+import { QueryClientProvider, QueryClient } from 'react-query';
 import { AppProps } from 'next/app';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../shared/Theme';
+import { Theme as theme } from '../components';
 import '../scripts/wdyr';
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>

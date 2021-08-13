@@ -1,49 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button } from '@material-ui/core';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import clsx from 'clsx';
-import Checkbox from '@material-ui/core/Checkbox';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import TelegramIcon from '@material-ui/icons/Telegram';
-import { ArchivizerLogo } from '../../shared/ArchivizerLogo';
-import { PasswordInput } from '../../shared/Form/PasswordInput';
-import { Divider } from '../../shared/Divider';
+import { TextField, Button, Checkbox } from '@material-ui/core';
+import { Twitter, Facebook, Telegram } from '@material-ui/icons';
+import {
+  ArchivizerLogo,
+  PasswordInput,
+  IconButton,
+  Divider,
+  Link,
+} from '../../components';
+import { getValidationErrorMessage } from '../../utils/forms';
+import { emailPattern } from '../../utils/constants';
 import { login } from '../../services/auth';
-import { Link } from '../../shared/Link';
+import { useStyles } from './styles';
 
-import styles from './styles.module.css';
-
-interface ILoginFormInputs {
+export interface LoginFormInputs {
   emailAddress: string;
   password: string;
   agreement: boolean;
 }
 
-const useStyles = makeStyles({
-  checkboxRoot: {
-    padding: 0,
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  signInButtonRoot: {
-    padding: '8px 16px',
-    textTransform: 'none',
-    fontFamily: 'Rubik',
-  },
-});
-
 const Login = () => {
-  const [formData, setFormData] = useState<ILoginFormInputs | null>(null);
+  const [formData, setFormData] = useState<LoginFormInputs | null>(null);
 
   const classes = useStyles();
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ILoginFormInputs>();
+  } = useForm<LoginFormInputs>();
 
   const { data, refetch } = login({
     email: formData ? formData?.emailAddress : '',
@@ -61,7 +47,7 @@ const Login = () => {
     // TODO: save token in localstorage
   }, [data]);
 
-  const onSubmit: SubmitHandler<ILoginFormInputs> = (data) => setFormData(data);
+  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => setFormData(data);
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
@@ -97,21 +83,26 @@ const Login = () => {
               name='emailAddress'
               control={control}
               rules={{
-                required: true,
-                pattern:
-                  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                required: {
+                  value: true,
+                  message: getValidationErrorMessage(
+                    'email address',
+                    'required'
+                  ),
+                },
+                pattern: {
+                  value: emailPattern,
+                  message: getValidationErrorMessage(
+                    'email address',
+                    'pattern'
+                  ),
+                },
               }}
               render={({ field }) => (
                 <TextField
                   id='emailAddress'
                   error={!!errors.emailAddress}
-                  helperText={
-                    errors.emailAddress?.type == 'required'
-                      ? 'This field is required'
-                      : errors.emailAddress?.type == 'pattern'
-                      ? 'Invalid email address'
-                      : null
-                  }
+                  helperText={errors.emailAddress?.message}
                   fullWidth
                   size='small'
                   variant='outlined'
@@ -130,15 +121,17 @@ const Login = () => {
             <Controller
               name='password'
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: {
+                  value: true,
+                  message: getValidationErrorMessage('password', 'required'),
+                },
+              }}
               render={({ field }) => (
                 <PasswordInput
                   id='password'
                   error={!!errors.password}
-                  helperText={
-                    errors.password?.type == 'required' &&
-                    'This field is required'
-                  }
+                  helperText={errors.password?.message}
                   fullWidth
                   useShowIcon
                   variant='outlined'
@@ -206,7 +199,6 @@ const Login = () => {
               </div>
             </label>
           </div>
-
           <Button
             variant='contained'
             type='submit'
@@ -225,15 +217,18 @@ const Login = () => {
           textClassName='text-sm bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400'
         />
         <div className='flex gap-x-2.5 my-1'>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <FacebookIcon fontSize='small' />
-          </Button>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <TwitterIcon fontSize='small' />
-          </Button>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <TelegramIcon fontSize='small' />
-          </Button>
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Facebook fontSize='small' color='secondary' />}
+          />
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Twitter fontSize='small' color='secondary' />}
+          />
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Telegram fontSize='small' color='secondary' />}
+          />
         </div>
       </div>
     </div>

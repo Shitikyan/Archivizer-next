@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
-interface Props {
+export interface DividerProps {
   text: string;
   className?: string;
   textClassName?: string;
 }
 
-export const Divider = ({ text, className, textClassName }: Props) => {
+const Divider = ({ text, className, textClassName }: DividerProps) => {
   return (
     <div className={clsx('relative flex justify-center', className)}>
       <span className={clsx('px-2', textClassName)}>{text}</span>
@@ -14,3 +14,6 @@ export const Divider = ({ text, className, textClassName }: Props) => {
     </div>
   );
 };
+
+Divider.whyDidYouRender = true;
+export default Divider;

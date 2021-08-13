@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import clsx from 'clsx';
 import { TextField, Button } from '@material-ui/core';
-import { Link } from '../../shared/Link';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import TelegramIcon from '@material-ui/icons/Telegram';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { PasswordInput } from '../../shared/Form/PasswordInput';
-import { UserIcon } from '../../shared/Icons/UserIcon';
-import { Divider } from '../../shared/Divider';
+import { Facebook, Twitter, Telegram } from '@material-ui/icons';
+import {
+  PasswordInput,
+  UserIcon,
+  Divider,
+  Link,
+  ErrorTab,
+  IconButton,
+} from '../../components';
+import { getValidationErrorMessage } from '../../utils/forms';
+import { emailPattern } from '../../utils/constants';
 import { signUp } from '../../services/auth';
+import { useStyles } from './styles';
 
-import styles from './styles.module.css';
-
-interface ISignupFormInputs {
+export interface SignupFormInputs {
   fullName: string;
   emailAddress: string;
   password: string;
 }
 
 const Signup = () => {
-  const [formData, setFormData] = useState<ISignupFormInputs | null>(null);
+  const [formData, setFormData] = useState<SignupFormInputs | null>(null);
 
+  const classes = useStyles();
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ISignupFormInputs>();
+  } = useForm<SignupFormInputs>();
 
   const { data, refetch } = signUp({
     fullName: formData ? formData?.fullName : '',
@@ -36,23 +40,16 @@ const Signup = () => {
   });
 
   useEffect(() => {
-    if (formData) {
-      refetch();
-    }
+    if (formData) refetch();
   }, [formData]);
 
   useEffect(() => {
     // TODO: save token in localstorage
   }, [data]);
 
-  const onSubmit: SubmitHandler<ISignupFormInputs> = (data) =>
-    setFormData(data);
+  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => setFormData(data);
 
-  const {
-    fullName: nameError,
-    emailAddress: emailError,
-    password: passwordError,
-  } = errors;
+  const errorValues = Object.values(errors);
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
@@ -68,7 +65,7 @@ const Signup = () => {
               <Link
                 href='default.asp'
                 target='_blank'
-                className='hover:text-blue-500 font-bold'
+                className='hover:text-blue-500 font-medium'
               >
                 sign in to your account
               </Link>
@@ -76,129 +73,145 @@ const Signup = () => {
           </div>
         </div>
         <form
-          className={`${styles.form} flex flex-col`}
+          className='flex flex-col gap-y-6 mt-10'
           onSubmit={handleSubmit(onSubmit)}
         >
-          <label
-            className='block text-sm font-medium text-gray-700 dark:text-gray-300'
-            htmlFor='fullName'
-          >
-            Full name
-          </label>
-          <Controller
-            name='fullName'
-            control={control}
-            defaultValue=''
-            rules={{ required: true, minLength: 4 }}
-            render={({ field }) => (
-              <TextField
-                id='fullName'
-                type='fullName'
-                error={!!errors.fullName}
-                helperText={
-                  errors.fullName?.type == 'required' ? (
-                    <div className='text-red-600'>This field is required</div>
-                  ) : errors.fullName?.type == 'minLength' ? (
-                    <div className='text-red-600'>
-                      Your Full name must be more than 4 characters.
-                    </div>
-                  ) : null
-                }
-                variant='outlined'
-                size='small'
-                {...field}
-              />
-            )}
-          />
-          <label
-            className='block text-sm font-medium text-gray-700 dark:text-gray-300'
-            htmlFor='emailAddress'
-          >
-            Email address
-          </label>
-          <Controller
-            name='emailAddress'
-            control={control}
-            defaultValue=''
-            rules={{
-              required: true,
-              pattern:
-                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            }}
-            render={({ field }) => (
-              <TextField
-                id='emailAddress'
-                error={!!errors.emailAddress}
-                helperText={
-                  errors.emailAddress?.type == 'required' ? (
-                    <div className='text-red-600'>This field is required</div>
-                  ) : errors.emailAddress?.type == 'pattern' ? (
-                    <div className='text-red-600'>Invalid email address</div>
-                  ) : errors.emailAddress?.type == 'minLength' ? (
-                    <div className='text-red-600'>
-                      Your email must be more than 4 characters.
-                    </div>
-                  ) : null
-                }
-                size='small'
-                variant='outlined'
-                {...field}
-              />
-            )}
-          />
-          <label
-            className='block text-sm font-medium text-gray-700 dark:text-gray-300'
-            htmlFor='password'
-          >
-            Password
-          </label>
-          <Controller
-            name='password'
-            control={control}
-            defaultValue=''
-            rules={{ required: true, minLength: 4 }}
-            render={({ field }) => (
-              <PasswordInput
-                id='password'
-                error={!!errors.password}
-                helperText={
-                  errors.password?.type == 'required'
-                    ? 'This field is required'
-                    : errors.password?.type == 'minLength'
-                    ? 'Your password must be more than 4 characters.'
-                    : null
-                }
-                useShowIcon
-                variant='outlined'
-                size='small'
-                {...field}
-              />
-            )}
-          />
-          {emailError && nameError && passwordError && (
-            <div className={styles.submissionError}>
-              <div className={`${styles.submissionErrorHeader} flex`}>
-                <div>
-                  <HighlightOffIcon fontSize='small' />
-                </div>
-                <div>
-                  <div>There were 2 errors with your submission</div>
-                  <ul className={styles.listedHeader}>
-                    <li>Your password must be at least 8 characters</li>
-                    <li>
-                      Your password must include at least one pro wrestling
-                      finishing move
-                    </li>
+          <div>
+            <label
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+              htmlFor='fullName'
+            >
+              Full name
+            </label>
+            <Controller
+              name='fullName'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: getValidationErrorMessage('Full name', 'required'),
+                },
+                minLength: {
+                  value: 4,
+                  message: getValidationErrorMessage(
+                    'Full name',
+                    'minLength',
+                    4
+                  ),
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  id='fullName'
+                  type='fullName'
+                  error={!!errors.fullName}
+                  helperText={errors.fullName?.message}
+                  variant='outlined'
+                  fullWidth
+                  size='small'
+                  {...field}
+                />
+              )}
+            />
+          </div>
+          <div>
+            <label
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+              htmlFor='emailAddress'
+            >
+              Email address
+            </label>
+            <Controller
+              name='emailAddress'
+              control={control}
+              defaultValue=''
+              rules={{
+                required: {
+                  value: true,
+                  message: getValidationErrorMessage(
+                    'Email address',
+                    'required'
+                  ),
+                },
+                pattern: {
+                  value: emailPattern,
+                  message: getValidationErrorMessage(
+                    'Email address',
+                    'pattern'
+                  ),
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  id='emailAddress'
+                  error={!!errors.emailAddress}
+                  helperText={errors.emailAddress?.message}
+                  size='small'
+                  fullWidth
+                  variant='outlined'
+                  {...field}
+                />
+              )}
+            />
+          </div>
+          <div>
+            <label
+              className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+              htmlFor='password'
+            >
+              Password
+            </label>
+            <Controller
+              name='password'
+              control={control}
+              defaultValue=''
+              rules={{
+                required: {
+                  value: true,
+                  message: getValidationErrorMessage('Password', 'required'),
+                },
+                minLength: {
+                  value: 4,
+                  message: getValidationErrorMessage(
+                    'Password',
+                    'minLength',
+                    4
+                  ),
+                },
+              }}
+              render={({ field }) => (
+                <PasswordInput
+                  id='password'
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  useShowIcon
+                  fullWidth
+                  variant='outlined'
+                  size='small'
+                  {...field}
+                />
+              )}
+            />
+          </div>
+          {errorValues.length > 0 && (
+            <div>
+              <ErrorTab
+                header={`There were ${errorValues.length} errors with your submission`}
+                content={
+                  <ul className='text-sm list-disc mt-2 pl-5'>
+                    {errorValues.map((value) => (
+                      <li color='error'>{value.message}</li>
+                    ))}
                   </ul>
-                </div>
-              </div>
+                }
+              />
             </div>
           )}
           <Button
             variant='contained'
             type='submit'
             color='primary'
-            className={styles.signupButton}
+            className={classes.signupButton}
           >
             Sign up
           </Button>
@@ -209,19 +222,23 @@ const Signup = () => {
           textClassName='text-sm bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400'
         />
         <div className='flex gap-x-2.5 my-1'>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <FacebookIcon fontSize='small' />
-          </Button>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <TwitterIcon fontSize='small' />
-          </Button>
-          <Button className={styles.webPagesButtons} variant='contained'>
-            <TelegramIcon fontSize='small' />
-          </Button>
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Facebook fontSize='small' color='secondary' />}
+          />
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Twitter fontSize='small' color='secondary' />}
+          />
+          <IconButton
+            className={clsx('flex-grow', classes.webPagesButton)}
+            icon={<Telegram fontSize='small' color='secondary' />}
+          />
         </div>
       </div>
     </div>
   );
 };
 
+Signup.whyDidYouRender = true;
 export default Signup;

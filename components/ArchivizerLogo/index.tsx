@@ -1,10 +1,10 @@
 import clsx from "clsx"
 
-interface Props {
+export interface ArchivizerLogoProps {
   className?: string;
 }
 
-export const ArchivizerLogo = ({ className }: Props) => {
+const ArchivizerLogo = ({ className }: ArchivizerLogoProps) => {
   return (
     <div className={clsx('bg-gradient-to-tr from-blue-600 p-4 rounded-2xl text-white to-blue-400', className)}>
       <svg
@@ -20,3 +20,6 @@ export const ArchivizerLogo = ({ className }: Props) => {
     </div>
   );
 };
+
+ArchivizerLogo.whyDidYouRender = true;
+export default ArchivizerLogo;

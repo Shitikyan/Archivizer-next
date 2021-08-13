@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
-interface Props {
+export interface UserIconProps {
   className?: string;
 }
 
-export const UserIcon = ({ className }: Props) => {
+const UserIcon = ({ className }: UserIconProps) => {
   return (
     <div
       className={clsx(
@@ -28,3 +28,6 @@ export const UserIcon = ({ className }: Props) => {
     </div>
   );
 };
+
+UserIcon.whyDidYouRender = true;
+export default UserIcon;

@@ -23,9 +23,9 @@ export const getValidationErrorMessage = (
 ) => {
   switch (type) {
     case 'required':
-      return 'This field is required';
+      return `${inputName} is a required field`;
     case 'pattern':
-      return `Invalid ${inputName}`;
+      return `${inputName} is invalid`;
     case 'minLength':
       return `Your ${inputName} must be more than ${
         charCount ? charCount : 0
